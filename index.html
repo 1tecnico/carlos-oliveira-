@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Mochila do Carlos</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+body{
+font-family: Arial;
+background:#eef2ff;
+margin:0;
+}
+
+header{
+background:#4f46e5;
+color:white;
+padding:20px;
+text-align:center;
+}
+
+.container{
+padding:20px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+gap:20px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+button{
+background:#4f46e5;
+color:white;
+border:none;
+padding:8px 12px;
+border-radius:5px;
+cursor:pointer;
+}
+
+input,textarea{
+width:100%;
+padding:8px;
+margin-top:5px;
+margin-bottom:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🎒 Mochila do Carlos</h1>
+<p>Sistema de ajuda para estudos</p>
+</header>
+
+<div class="container">
+
+<!-- Calendário -->
+<div class="card">
+<h2>📅 Calendário Escolar</h2>
+<input type="date">
+<p>Anote provas e trabalhos.</p>
+</div>
+
+<!-- Gráfico -->
+<div class="card">
+<h2>📊 Gráfico de Notas</h2>
+<canvas id="grafico"></canvas>
+</div>
+
+<!-- Sistema de estudo -->
+<div class="card">
+<h2>🧠 Sistema de Estudo</h2>
+
+<input id="tarefa" placeholder="Nova tarefa de estudo">
+
+<button onclick="addTarefa()">Adicionar</button>
+
+<ul id="lista"></ul>
+
+</div>
+
+<!-- Resumos -->
+<div class="card">
+<h2>📚 Resumos</h2>
+
+<textarea id="resumo" placeholder="Escreva seu resumo aqui"></textarea>
+
+<button onclick="salvarResumo()">Salvar resumo</button>
+
+<p id="status"></p>
+
+</div>
+
+<!-- Modo prova -->
+<div class="card">
+<h2>📝 Modo Prova - Matemática</h2>
+
+<p id="pergunta"></p>
+
+<input type="number" id="resposta">
+
+<button onclick="verificar()">Responder</button>
+
+<p id="resultado"></p>
+
+<p>Acertos: <span id="acertos">0</span></p>
+
+</div>
+
+</div>
+
+<script>
+
+/* grafico */
+
+const ctx=document.getElementById('grafico');
+
+new Chart(ctx,{
+type:'bar',
+data:{
+labels:['Português','Matemática','História','Geografia'],
+datasets:[{
+label:'Notas',
+data:[8,7,9,6]
+}]
+}
+});
+
+/* tarefas */
+
+function addTarefa(){
+
+let tarefa=document.getElementById("tarefa").value;
+
+let li=document.createElement("li");
+
+li.textContent=tarefa;
+
+document.getElementById("lista").appendChild(li);
+
+document.getElementById("tarefa").value="";
+
+}
+
+/* resumo */
+
+function salvarResumo(){
+
+localStorage.setItem("resumo",
+document.getElementById("resumo").value);
+
+document.getElementById("status").innerText="Resumo salvo!";
+
+}
+
+/* modo prova */
+
+let n1;
+let n2;
+let acertos=0;
+
+function novaPergunta(){
+
+n1=Math.floor(Math.random()*10)+1;
+n2=Math.floor(Math.random()*10)+1;
+
+document.getElementById("pergunta").innerText=
+"Quanto é "+n1+" x "+n2+" ?";
+
+document.getElementById("resposta").value="";
+
+}
+
+function verificar(){
+
+let r=parseInt(
+document.getElementById("resposta").value
+);
+
+if(r===n1*n2){
+
+acertos++;
+
+document.getElementById("resultado")
+.innerText="✅ Acertou! Nova pergunta.";
+
+document.getElementById("acertos")
+.innerText=acertos;
+
+novaPergunta();
+
+}else{
+
+document.getElementById("resultado")
+.innerText="❌ Errado, tente novamente.";
+
+}
+
+}
+
+novaPergunta();
+
+</script>
+
+</body>
+</html>
